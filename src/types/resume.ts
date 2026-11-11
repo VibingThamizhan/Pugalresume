@@ -63,6 +63,14 @@ export interface ResumeData {
   additionalInfo: { label: string; value: string }[];
 }
 
-export type ResumeTheme = 'navy' | 'ats' | 'teal' | 'slate';
+export type ResumeTheme = 'navy' | 'ats' | 'teal' | 'slate' | 'custom';
 export type ResumeFormat = 'full' | 'compact';
 export type SpacingDensity = 'compact' | 'normal' | 'spacious';
+export type HeaderStyle = 'classic' | 'modern-bar' | 'solid-banner' | 'minimal';
+
+export interface ColorCustomization {
+  primaryColor: string; // Hex (e.g. #0B2545)
+  secondaryColor: string; // Hex
+  paperColor: string; // Hex (e.g. #FFFFFF)
+  headerStyle: HeaderStyle;
+}

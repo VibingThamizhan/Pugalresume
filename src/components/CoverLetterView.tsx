@@ -7,12 +7,14 @@ interface CoverLetterProps {
   data: ResumeData;
   targetRole?: string;
   targetCompany?: string;
+  primaryColor?: string;
 }
 
 export const CoverLetterView: React.FC<CoverLetterProps> = ({
   data,
   targetRole = 'Document Controller',
   targetCompany = 'Hiring Manager / Recruitment Team',
+  primaryColor = '#0B2545',
 }) => {
   const { personalInfo } = data;
   const [recipient, setRecipient] = useState(targetCompany);
@@ -123,11 +125,17 @@ ${personalInfo.location}`;
           style={{ fontFamily: "'Public Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" }}
         >
           {/* Header */}
-          <div className="border-b-2 border-[#0B2545] pb-4 mb-6">
+          <div
+            className="border-b-2 pb-4 mb-6"
+            style={{ borderBottomColor: primaryColor }}
+          >
             <h1 className="text-2xl font-extrabold tracking-tight text-slate-950 uppercase">
               {personalInfo.fullName}
             </h1>
-            <div className="text-sm font-semibold text-[#0B2545] mt-0.5">
+            <div
+              className="text-sm font-semibold mt-0.5"
+              style={{ color: primaryColor }}
+            >
               {personalInfo.targetTitle} | {personalInfo.secondaryTitle}
             </div>
 

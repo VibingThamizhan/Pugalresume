@@ -1,26 +1,26 @@
 import React from 'react';
-import { ResumeData, ResumeTheme, ResumeFormat, SpacingDensity } from '../types/resume';
-import { Mail, Phone, MapPin, Linkedin, Award, ShieldCheck, CheckCircle2 } from 'lucide-react';
+import { ResumeData, ResumeFormat, SpacingDensity, ColorCustomization } from '../types/resume';
+import { Mail, Phone, MapPin, Linkedin, ShieldCheck, CheckCircle2 } from 'lucide-react';
 
 interface ResumePreviewProps {
   data: ResumeData;
-  theme: ResumeTheme;
+  colorConfig: ColorCustomization;
   format: ResumeFormat;
   density: SpacingDensity;
   showMetricsBar: boolean;
-  industryFocus?: string;
   zoomLevel?: number;
 }
 
 export const ResumePreview: React.FC<ResumePreviewProps> = ({
   data,
-  theme,
+  colorConfig,
   format,
   density,
   showMetricsBar,
   zoomLevel = 100,
 }) => {
   const { personalInfo, summary, metrics, competencies, experience, education, certifications, languages, additionalInfo } = data;
+  const { primaryColor, paperColor, headerStyle } = colorConfig;
 
   // Density classes
   const spacingClasses = {
@@ -53,58 +53,6 @@ export const ResumePreview: React.FC<ResumePreviewProps> = ({
     },
   }[density];
 
-  // Theme palettes
-  const themeStyles = {
-    navy: {
-      primary: 'text-[#0B2545]',
-      border: 'border-[#0B2545]',
-      accentBg: 'bg-[#0B2545]',
-      headerBg: 'border-b-2 border-[#0B2545]',
-      kicker: 'text-[#0B2545] font-semibold',
-      subText: 'text-slate-600',
-      badgeBg: 'bg-slate-100 text-slate-800',
-      metricBorder: 'border-slate-200 bg-slate-50/70',
-      headingDivider: 'border-b border-[#0B2545]/20',
-      pillAccent: 'border-l-2 border-[#0B2545] pl-2',
-    },
-    ats: {
-      primary: 'text-black',
-      border: 'border-black',
-      accentBg: 'bg-black',
-      headerBg: 'border-b-2 border-black',
-      kicker: 'text-black font-semibold',
-      subText: 'text-gray-700',
-      badgeBg: 'bg-gray-100 text-black',
-      metricBorder: 'border-gray-300 bg-white',
-      headingDivider: 'border-b border-black',
-      pillAccent: 'border-l-2 border-black pl-2',
-    },
-    teal: {
-      primary: 'text-[#0E3B43]',
-      border: 'border-[#0E3B43]',
-      accentBg: 'bg-[#0E3B43]',
-      headerBg: 'border-b-2 border-[#0E3B43]',
-      kicker: 'text-[#0E3B43] font-semibold',
-      subText: 'text-slate-600',
-      badgeBg: 'bg-teal-50 text-[#0E3B43]',
-      metricBorder: 'border-teal-100 bg-teal-50/40',
-      headingDivider: 'border-b border-[#0E3B43]/20',
-      pillAccent: 'border-l-2 border-[#0E3B43] pl-2',
-    },
-    slate: {
-      primary: 'text-slate-900',
-      border: 'border-slate-800',
-      accentBg: 'bg-slate-900',
-      headerBg: 'border-b-2 border-slate-800',
-      kicker: 'text-slate-800 font-semibold',
-      subText: 'text-slate-600',
-      badgeBg: 'bg-slate-100 text-slate-800',
-      metricBorder: 'border-slate-200 bg-slate-50',
-      headingDivider: 'border-b border-slate-300',
-      pillAccent: 'border-l-2 border-slate-800 pl-2',
-    },
-  }[theme];
-
   // Filter experiences if compact format is chosen
   const displayedExperience = format === 'compact' ? experience.slice(0, 2) : experience;
 
@@ -115,84 +63,195 @@ export const ResumePreview: React.FC<ResumePreviewProps> = ({
     >
       <div
         id="resume-document-root"
-        className={`resume-paper bg-white text-slate-900 shadow-xl print:shadow-none w-full max-w-[830px] min-h-[1140px] mx-auto ${spacingClasses.containerPad} transition-all`}
+        className={`resume-paper text-slate-900 shadow-xl print:shadow-none w-full max-w-[830px] min-h-[1140px] mx-auto ${spacingClasses.containerPad} transition-all rounded-xs`}
         style={{
+          backgroundColor: paperColor || '#FFFFFF',
           fontFamily: "'Public Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
         }}
       >
         {/* ==================================================================== */}
         {/* 1. HEADER ZONE                                                       */}
         {/* ==================================================================== */}
-        <header className={`${themeStyles.headerBg} ${spacingClasses.headerPadding}`}>
-          <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-3">
-            <div>
-              <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight text-slate-950 uppercase">
-                {personalInfo.fullName}
-              </h1>
-              <div className="mt-1 flex flex-wrap items-center gap-x-2 text-sm md:text-[15px] font-semibold text-slate-700">
-                <span className={themeStyles.primary}>{personalInfo.targetTitle}</span>
-                <span className="text-slate-300 font-normal">|</span>
-                <span>{personalInfo.secondaryTitle}</span>
+        {headerStyle === 'solid-banner' ? (
+          // Solid Colored Executive Banner Header
+          <header
+            className="mb-4 -mx-10 -mt-10 p-8 text-white rounded-t-xs"
+            style={{ backgroundColor: primaryColor }}
+          >
+            <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-3">
+              <div>
+                <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight uppercase text-white">
+                  {personalInfo.fullName}
+                </h1>
+                <div className="mt-1 flex flex-wrap items-center gap-x-2 text-sm md:text-[15px] font-semibold text-white/90">
+                  <span>{personalInfo.targetTitle}</span>
+                  <span className="text-white/40">|</span>
+                  <span>{personalInfo.secondaryTitle}</span>
+                </div>
+              </div>
+
+              {/* Status */}
+              <div className="text-left md:text-right text-xs text-white/80 space-y-0.5">
+                <div className="font-semibold text-white flex items-center md:justify-end gap-1.5">
+                  <ShieldCheck className="w-3.5 h-3.5 text-emerald-300 inline shrink-0" />
+                  <span>{personalInfo.visaStatus}</span>
+                </div>
+                <div className="flex items-center md:justify-end gap-1.5 text-white/90">
+                  <span className="inline-block w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+                  <span>Availability: <strong>{personalInfo.availability}</strong></span>
+                </div>
+                <div>{personalInfo.drivingLicense}</div>
               </div>
             </div>
 
-            {/* Quick Status Block (Crucial for UAE Recruiters) */}
-            <div className="text-left md:text-right text-xs text-slate-600 space-y-0.5">
-              <div className="font-semibold text-slate-900 flex items-center md:justify-end gap-1.5">
-                <ShieldCheck className="w-3.5 h-3.5 text-emerald-600 inline shrink-0" />
-                <span>{personalInfo.visaStatus}</span>
-              </div>
-              <div className="flex items-center md:justify-end gap-1.5 text-slate-700">
-                <span className="inline-block w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
-                <span>Availability: <strong className="text-slate-900 font-medium">{personalInfo.availability}</strong></span>
-              </div>
-              <div>{personalInfo.drivingLicense}</div>
+            {/* Contact row */}
+            <div className="mt-3 pt-2.5 border-t border-white/20 flex flex-wrap items-center gap-y-1.5 gap-x-4 text-xs text-white/90 font-medium">
+              <span className="flex items-center gap-1">
+                <MapPin className="w-3.5 h-3.5 text-white/70" />
+                {personalInfo.location}
+              </span>
+              <span className="text-white/30">·</span>
+              <a href={`tel:${personalInfo.phone.replace(/\s+/g, '')}`} className="flex items-center gap-1 hover:underline">
+                <Phone className="w-3.5 h-3.5 text-white/70" />
+                {personalInfo.phone}
+              </a>
+              <span className="text-white/30">·</span>
+              <a href={`mailto:${personalInfo.email}`} className="flex items-center gap-1 hover:underline">
+                <Mail className="w-3.5 h-3.5 text-white/70" />
+                {personalInfo.email}
+              </a>
+              <span className="text-white/30">·</span>
+              <a href={`https://${personalInfo.linkedin}`} target="_blank" rel="noreferrer" className="flex items-center gap-1 hover:underline">
+                <Linkedin className="w-3.5 h-3.5 text-white/70" />
+                {personalInfo.linkedin}
+              </a>
             </div>
-          </div>
+          </header>
+        ) : headerStyle === 'modern-bar' ? (
+          // Modern Left Pillar Accent Bar
+          <header
+            className={`border-l-4 pl-4 ${spacingClasses.headerPadding}`}
+            style={{ borderLeftColor: primaryColor }}
+          >
+            <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-3">
+              <div>
+                <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight text-slate-950 uppercase">
+                  {personalInfo.fullName}
+                </h1>
+                <div className="mt-1 flex flex-wrap items-center gap-x-2 text-sm md:text-[15px] font-semibold text-slate-700">
+                  <span style={{ color: primaryColor }}>{personalInfo.targetTitle}</span>
+                  <span className="text-slate-300 font-normal">|</span>
+                  <span>{personalInfo.secondaryTitle}</span>
+                </div>
+              </div>
 
-          {/* Contact Bar */}
-          <div className="mt-3 pt-2.5 border-t border-slate-100 flex flex-wrap items-center gap-y-1.5 gap-x-4 text-xs text-slate-600 font-medium">
-            <span className="flex items-center gap-1 text-slate-800">
-              <MapPin className="w-3.5 h-3.5 text-slate-500 shrink-0" />
-              {personalInfo.location}
-            </span>
-            <span className="text-slate-300">·</span>
-            <a
-              href={`tel:${personalInfo.phone.replace(/\s+/g, '')}`}
-              className="flex items-center gap-1 text-slate-800 hover:text-blue-600 transition-colors"
-            >
-              <Phone className="w-3.5 h-3.5 text-slate-500 shrink-0" />
-              {personalInfo.phone}
-            </a>
-            <span className="text-slate-300">·</span>
-            <a
-              href={`mailto:${personalInfo.email}`}
-              className="flex items-center gap-1 text-slate-800 hover:text-blue-600 transition-colors"
-            >
-              <Mail className="w-3.5 h-3.5 text-slate-500 shrink-0" />
-              {personalInfo.email}
-            </a>
-            <span className="text-slate-300">·</span>
-            <a
-              href={`https://${personalInfo.linkedin}`}
-              target="_blank"
-              rel="noreferrer"
-              className="flex items-center gap-1 text-slate-800 hover:text-blue-600 transition-colors"
-            >
-              <Linkedin className="w-3.5 h-3.5 text-slate-500 shrink-0" />
-              {personalInfo.linkedin}
-            </a>
-          </div>
-        </header>
+              <div className="text-left md:text-right text-xs text-slate-600 space-y-0.5">
+                <div className="font-semibold text-slate-900 flex items-center md:justify-end gap-1.5">
+                  <ShieldCheck className="w-3.5 h-3.5 text-emerald-600 inline shrink-0" />
+                  <span>{personalInfo.visaStatus}</span>
+                </div>
+                <div className="flex items-center md:justify-end gap-1.5 text-slate-700">
+                  <span className="inline-block w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                  <span>Availability: <strong className="text-slate-900 font-medium">{personalInfo.availability}</strong></span>
+                </div>
+                <div>{personalInfo.drivingLicense}</div>
+              </div>
+            </div>
+
+            <div className="mt-3 pt-2.5 border-t border-slate-100 flex flex-wrap items-center gap-y-1.5 gap-x-4 text-xs text-slate-600 font-medium">
+              <span className="flex items-center gap-1 text-slate-800">
+                <MapPin className="w-3.5 h-3.5 text-slate-500 shrink-0" />
+                {personalInfo.location}
+              </span>
+              <span className="text-slate-300">·</span>
+              <a href={`tel:${personalInfo.phone.replace(/\s+/g, '')}`} className="flex items-center gap-1 text-slate-800 hover:text-blue-600">
+                <Phone className="w-3.5 h-3.5 text-slate-500 shrink-0" />
+                {personalInfo.phone}
+              </a>
+              <span className="text-slate-300">·</span>
+              <a href={`mailto:${personalInfo.email}`} className="flex items-center gap-1 text-slate-800 hover:text-blue-600">
+                <Mail className="w-3.5 h-3.5 text-slate-500 shrink-0" />
+                {personalInfo.email}
+              </a>
+              <span className="text-slate-300">·</span>
+              <a href={`https://${personalInfo.linkedin}`} target="_blank" rel="noreferrer" className="flex items-center gap-1 text-slate-800 hover:text-blue-600">
+                <Linkedin className="w-3.5 h-3.5 text-slate-500 shrink-0" />
+                {personalInfo.linkedin}
+              </a>
+            </div>
+          </header>
+        ) : (
+          // Classic Bottom Border (Default)
+          <header
+            className={`border-b-2 ${spacingClasses.headerPadding}`}
+            style={{ borderBottomColor: primaryColor }}
+          >
+            <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-3">
+              <div>
+                <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight text-slate-950 uppercase">
+                  {personalInfo.fullName}
+                </h1>
+                <div className="mt-1 flex flex-wrap items-center gap-x-2 text-sm md:text-[15px] font-semibold text-slate-700">
+                  <span style={{ color: primaryColor }}>{personalInfo.targetTitle}</span>
+                  <span className="text-slate-300 font-normal">|</span>
+                  <span>{personalInfo.secondaryTitle}</span>
+                </div>
+              </div>
+
+              <div className="text-left md:text-right text-xs text-slate-600 space-y-0.5">
+                <div className="font-semibold text-slate-900 flex items-center md:justify-end gap-1.5">
+                  <ShieldCheck className="w-3.5 h-3.5 text-emerald-600 inline shrink-0" />
+                  <span>{personalInfo.visaStatus}</span>
+                </div>
+                <div className="flex items-center md:justify-end gap-1.5 text-slate-700">
+                  <span className="inline-block w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                  <span>Availability: <strong className="text-slate-900 font-medium">{personalInfo.availability}</strong></span>
+                </div>
+                <div>{personalInfo.drivingLicense}</div>
+              </div>
+            </div>
+
+            <div className="mt-3 pt-2.5 border-t border-slate-100 flex flex-wrap items-center gap-y-1.5 gap-x-4 text-xs text-slate-600 font-medium">
+              <span className="flex items-center gap-1 text-slate-800">
+                <MapPin className="w-3.5 h-3.5 text-slate-500 shrink-0" />
+                {personalInfo.location}
+              </span>
+              <span className="text-slate-300">·</span>
+              <a href={`tel:${personalInfo.phone.replace(/\s+/g, '')}`} className="flex items-center gap-1 text-slate-800 hover:text-blue-600">
+                <Phone className="w-3.5 h-3.5 text-slate-500 shrink-0" />
+                {personalInfo.phone}
+              </a>
+              <span className="text-slate-300">·</span>
+              <a href={`mailto:${personalInfo.email}`} className="flex items-center gap-1 text-slate-800 hover:text-blue-600">
+                <Mail className="w-3.5 h-3.5 text-slate-500 shrink-0" />
+                {personalInfo.email}
+              </a>
+              <span className="text-slate-300">·</span>
+              <a href={`https://${personalInfo.linkedin}`} target="_blank" rel="noreferrer" className="flex items-center gap-1 text-slate-800 hover:text-blue-600">
+                <Linkedin className="w-3.5 h-3.5 text-slate-500 shrink-0" />
+                {personalInfo.linkedin}
+              </a>
+            </div>
+          </header>
+        )}
 
         {/* ==================================================================== */}
         {/* 2. VERIFIED METRICS / IMPACT BANNER (OPTIONAL TOGGLE)               */}
         {/* ==================================================================== */}
         {showMetricsBar && (
-          <div className={`grid grid-cols-2 sm:grid-cols-4 gap-2 mb-4 p-2.5 rounded border ${themeStyles.metricBorder}`}>
+          <div
+            className="grid grid-cols-2 sm:grid-cols-4 gap-2 mb-4 p-2.5 rounded border"
+            style={{
+              borderColor: `${primaryColor}25`,
+              backgroundColor: `${primaryColor}08`,
+            }}
+          >
             {metrics.map((m, idx) => (
               <div key={idx} className="text-center px-1 py-0.5">
-                <div className={`text-base font-bold tabular-nums tracking-tight ${themeStyles.primary}`}>
+                <div
+                  className="text-base font-bold tabular-nums tracking-tight"
+                  style={{ color: primaryColor }}
+                >
                   {m.value}
                 </div>
                 <div className="text-[11px] font-semibold text-slate-800 uppercase tracking-wider">
@@ -210,11 +269,17 @@ export const ResumePreview: React.FC<ResumePreviewProps> = ({
         {/* 3. PROFESSIONAL SUMMARY                                              */}
         {/* ==================================================================== */}
         <section className={`${spacingClasses.sectionGap} avoid-break`}>
-          <div className={`flex items-center justify-between pb-1 mb-2 ${themeStyles.headingDivider}`}>
-            <h2 className={`${spacingClasses.headingSize} ${themeStyles.primary} uppercase`}>
-              Executive Profile & Summary
+          <div
+            className="flex items-center justify-between pb-1 mb-2 border-b"
+            style={{ borderBottomColor: `${primaryColor}30` }}
+          >
+            <h2
+              className={`${spacingClasses.headingSize} uppercase`}
+              style={{ color: primaryColor }}
+            >
+              Executive Profile &amp; Summary
             </h2>
-            <span className="text-[11px] font-medium text-slate-400">ACTVET & CPD Certified</span>
+            <span className="text-[11px] font-medium text-slate-400">ACTVET &amp; CPD Certified</span>
           </div>
           <p className={`${spacingClasses.fontSize} text-slate-700 text-justify text-wrap-balance`}>
             {summary}
@@ -225,16 +290,26 @@ export const ResumePreview: React.FC<ResumePreviewProps> = ({
         {/* 4. CORE TECHNICAL COMPETENCIES MATRIX                                */}
         {/* ==================================================================== */}
         <section className={`${spacingClasses.sectionGap} avoid-break`}>
-          <div className={`flex items-center justify-between pb-1 mb-2.5 ${themeStyles.headingDivider}`}>
-            <h2 className={`${spacingClasses.headingSize} ${themeStyles.primary} uppercase`}>
-              Technical Competencies & Systems
+          <div
+            className="flex items-center justify-between pb-1 mb-2.5 border-b"
+            style={{ borderBottomColor: `${primaryColor}30` }}
+          >
+            <h2
+              className={`${spacingClasses.headingSize} uppercase`}
+              style={{ color: primaryColor }}
+            >
+              Technical Competencies &amp; Systems
             </h2>
-            <span className="text-[11px] font-medium text-slate-400">EDMS & Compliance</span>
+            <span className="text-[11px] font-medium text-slate-400">EDMS &amp; Compliance</span>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-2.5">
             {competencies.map((cat, idx) => (
-              <div key={idx} className="border-l-2 border-slate-200 pl-2.5">
+              <div
+                key={idx}
+                className="border-l-2 pl-2.5"
+                style={{ borderLeftColor: `${primaryColor}50` }}
+              >
                 <h3 className="text-xs font-bold text-slate-900 tracking-wide mb-1">
                   {cat.category}
                 </h3>
@@ -250,8 +325,14 @@ export const ResumePreview: React.FC<ResumePreviewProps> = ({
         {/* 5. PROFESSIONAL EXPERIENCE                                           */}
         {/* ==================================================================== */}
         <section className={spacingClasses.sectionGap}>
-          <div className={`flex items-center justify-between pb-1 mb-3 ${themeStyles.headingDivider}`}>
-            <h2 className={`${spacingClasses.headingSize} ${themeStyles.primary} uppercase`}>
+          <div
+            className="flex items-center justify-between pb-1 mb-3 border-b"
+            style={{ borderBottomColor: `${primaryColor}30` }}
+          >
+            <h2
+              className={`${spacingClasses.headingSize} uppercase`}
+              style={{ color: primaryColor }}
+            >
               Professional Experience
             </h2>
             <span className="text-[11px] font-medium text-slate-400">10+ Years International</span>
@@ -285,7 +366,13 @@ export const ResumePreview: React.FC<ResumePreviewProps> = ({
                 <div className="flex flex-wrap items-center gap-x-2 text-[11.5px] text-slate-500 mt-0.5 mb-2">
                   {exp.framework && (
                     <>
-                      <span className="font-medium text-slate-700 bg-slate-100 px-1.5 py-0.2 rounded text-[11px]">
+                      <span
+                        className="font-medium px-1.5 py-0.2 rounded text-[11px]"
+                        style={{
+                          backgroundColor: `${primaryColor}12`,
+                          color: primaryColor,
+                        }}
+                      >
                         {exp.framework}
                       </span>
                       <span className="text-slate-300">·</span>
@@ -311,16 +398,29 @@ export const ResumePreview: React.FC<ResumePreviewProps> = ({
         {/* 6. PROFESSIONAL CERTIFICATIONS                                       */}
         {/* ==================================================================== */}
         <section className={`${spacingClasses.sectionGap} avoid-break`}>
-          <div className={`flex items-center justify-between pb-1 mb-2.5 ${themeStyles.headingDivider}`}>
-            <h2 className={`${spacingClasses.headingSize} ${themeStyles.primary} uppercase`}>
-              Professional Certifications & Accreditations
+          <div
+            className="flex items-center justify-between pb-1 mb-2.5 border-b"
+            style={{ borderBottomColor: `${primaryColor}30` }}
+          >
+            <h2
+              className={`${spacingClasses.headingSize} uppercase`}
+              style={{ color: primaryColor }}
+            >
+              Professional Certifications &amp; Accreditations
             </h2>
-            <span className="text-[11px] font-medium text-slate-400">ACTVET & CPD</span>
+            <span className="text-[11px] font-medium text-slate-400">ACTVET &amp; CPD</span>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
             {certifications.map((cert) => (
-              <div key={cert.id} className="p-2.5 rounded bg-slate-50 border border-slate-200/80">
+              <div
+                key={cert.id}
+                className="p-2.5 rounded border"
+                style={{
+                  backgroundColor: `${primaryColor}06`,
+                  borderColor: `${primaryColor}20`,
+                }}
+              >
                 <div className="flex items-start justify-between gap-1">
                   <span className="text-xs font-bold text-slate-950 leading-tight">
                     {cert.title}
@@ -346,8 +446,14 @@ export const ResumePreview: React.FC<ResumePreviewProps> = ({
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-1 avoid-break">
           {/* Education */}
           <section>
-            <div className={`flex items-center justify-between pb-1 mb-2 ${themeStyles.headingDivider}`}>
-              <h2 className={`${spacingClasses.headingSize} ${themeStyles.primary} uppercase`}>
+            <div
+              className="flex items-center justify-between pb-1 mb-2 border-b"
+              style={{ borderBottomColor: `${primaryColor}30` }}
+            >
+              <h2
+                className={`${spacingClasses.headingSize} uppercase`}
+                style={{ color: primaryColor }}
+              >
                 Education
               </h2>
             </div>
@@ -380,8 +486,14 @@ export const ResumePreview: React.FC<ResumePreviewProps> = ({
 
           {/* Operational Readiness / UAE Credentials */}
           <section>
-            <div className={`flex items-center justify-between pb-1 mb-2 ${themeStyles.headingDivider}`}>
-              <h2 className={`${spacingClasses.headingSize} ${themeStyles.primary} uppercase`}>
+            <div
+              className="flex items-center justify-between pb-1 mb-2 border-b"
+              style={{ borderBottomColor: `${primaryColor}30` }}
+            >
+              <h2
+                className={`${spacingClasses.headingSize} uppercase`}
+                style={{ color: primaryColor }}
+              >
                 UAE Employment Readiness
               </h2>
             </div>
